@@ -59,10 +59,7 @@ public final class StillImageActivity extends AppCompatActivity {
 
   private static final String TAG = "StillImageActivity";
 
-  private static final String CLOUD_LABEL_DETECTION = "Cloud Label";
-  private static final String CLOUD_LANDMARK_DETECTION = "Landmark";
-  private static final String CLOUD_TEXT_DETECTION = "Cloud Text";
-  private static final String CLOUD_DOCUMENT_TEXT_DETECTION = "Doc Text";
+
   private static final String LABEL_DETECTION= "Label Detect";
 
   private static final String SIZE_PREVIEW = "w:max"; // Available on-screen width.
@@ -83,7 +80,7 @@ public final class StillImageActivity extends AppCompatActivity {
   private Button getImageButton;
   private ImageView preview;
   private GraphicOverlay graphicOverlay;
-  private String selectedMode = CLOUD_LABEL_DETECTION;
+  private String selectedMode = LABEL_DETECTION;
   private String selectedSize = SIZE_PREVIEW;
 
   boolean isLandScape;
@@ -189,10 +186,6 @@ public final class StillImageActivity extends AppCompatActivity {
   private void populateFeatureSelector() {
     Spinner featureSpinner = findViewById(R.id.featureSelector);
     List<String> options = new ArrayList<>();
-    options.add(CLOUD_LABEL_DETECTION);
-    options.add(CLOUD_LANDMARK_DETECTION);
-    options.add(CLOUD_TEXT_DETECTION);
-    options.add(CLOUD_DOCUMENT_TEXT_DETECTION);
     options.add(LABEL_DETECTION);
     // Creating adapter for featureSpinner
     ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_style, options);
@@ -395,18 +388,6 @@ public final class StillImageActivity extends AppCompatActivity {
 
   private void createImageProcessor() {
     switch (selectedMode) {
-      case CLOUD_LABEL_DETECTION:
-        imageProcessor = new CloudImageLabelingProcessor();
-        break;
-      case CLOUD_LANDMARK_DETECTION:
-        imageProcessor = new CloudLandmarkRecognitionProcessor();
-        break;
-      case CLOUD_TEXT_DETECTION:
-        imageProcessor = new CloudTextRecognitionProcessor();
-        break;
-      case CLOUD_DOCUMENT_TEXT_DETECTION:
-        imageProcessor = new CloudDocumentTextRecognitionProcessor();
-        break;
       case LABEL_DETECTION:
         imageProcessor = new ImageLabelingProcessor();
         break;
