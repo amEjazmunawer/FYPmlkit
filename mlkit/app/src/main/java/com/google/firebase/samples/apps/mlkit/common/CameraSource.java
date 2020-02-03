@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.WindowManager;
+import android.widget.TableRow;
 
 import com.google.android.gms.common.images.Size;
 import com.google.firebase.samples.apps.mlkit.common.preference.PreferenceUtils;
@@ -94,6 +95,7 @@ public class CameraSource {
   // references maintained to them.
   private SurfaceTexture dummySurfaceTexture;
   private final GraphicOverlay graphicOverlay;
+  private final TableRow row;
 
   // True if a SurfaceTexture is being used for the preview, false if a SurfaceHolder is being
   // used for the preview.  We want to be compatible back to Gingerbread, but SurfaceTexture
@@ -129,6 +131,7 @@ public class CameraSource {
     this.activity = activity;
     graphicOverlay = overlay;
     graphicOverlay.clear();
+    row = null;
     processingRunnable = new FrameProcessingRunnable();
   }
 
@@ -724,7 +727,7 @@ public class CameraSource {
                     .setRotation(rotation)
                     .setCameraFacing(facing)
                     .build(),
-                graphicOverlay);
+                graphicOverlay,row);
           }
         } catch (Exception t) {
           Log.e(TAG, "Exception thrown from receiver.", t);

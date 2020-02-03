@@ -44,12 +44,10 @@ import com.google.firebase.samples.apps.mlkit.common.CameraSource;
 import com.google.firebase.samples.apps.mlkit.common.CameraSourcePreview;
 import com.google.firebase.samples.apps.mlkit.common.GraphicOverlay;
 
-import com.google.firebase.samples.apps.mlkit.java.barcodescanning.BarcodeScanningProcessor;
+
 import com.google.firebase.samples.apps.mlkit.java.imagelabeling.ImageLabelingProcessor;
-import com.google.firebase.samples.apps.mlkit.java.objectdetection.ObjectDetectorProcessor;
 import com.google.firebase.samples.apps.mlkit.common.preference.SettingsActivity;
 import com.google.firebase.samples.apps.mlkit.common.preference.SettingsActivity.LaunchSource;
-import com.google.firebase.samples.apps.mlkit.java.textrecognition.TextRecognitionProcessor;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -181,23 +179,7 @@ public final class LivePreviewActivity extends AppCompatActivity
 
         try {
             switch (model) {
-                case TEXT_DETECTION:
-                    Log.i(TAG, "Using Text Detector Processor");
-                    cameraSource.setMachineLearningFrameProcessor(new TextRecognitionProcessor());
-                    break;
-                case OBJECT_DETECTION:
-                    Log.i(TAG, "Using Object Detector Processor");
-                    FirebaseVisionObjectDetectorOptions objectDetectorOptions =
-                            new FirebaseVisionObjectDetectorOptions.Builder()
-                                    .setDetectorMode(FirebaseVisionObjectDetectorOptions.STREAM_MODE)
-                                    .enableClassification().build();
-                    cameraSource.setMachineLearningFrameProcessor(
-                            new ObjectDetectorProcessor(objectDetectorOptions));
-                    break;
-                case BARCODE_DETECTION:
-                    Log.i(TAG, "Using Barcode Detector Processor");
-                    cameraSource.setMachineLearningFrameProcessor(new BarcodeScanningProcessor());
-                    break;
+
                 case IMAGE_LABEL_DETECTION:
                     Log.i(TAG, "Using Image Label Detector Processor");
                     cameraSource.setMachineLearningFrameProcessor(new ImageLabelingProcessor());

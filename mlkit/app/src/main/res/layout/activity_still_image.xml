@@ -10,10 +10,68 @@
     android:keepScreenOn="true">
 
 
+  <TableLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:stretchColumns="0,1">
+
+    <TableRow
+        android:id="@+id/resultRow1"
+        android:background="@null"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_margin="1dp"
+        android:layout_weight="1">
+
+      <ImageView
+
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          >
+
+
+
+      </ImageView>
+
+      <TextView
+
+          android:layout_width="50px"
+          android:layout_height="match_parent"
+          android:layout_column="1"
+          android:id="@+id/topcolumn"
+          android:gravity="center"
+          android:text="Test">
+
+
+      </TextView>
+    </TableRow>
+
+    <TableRow
+        android:background="@null"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_margin="1dp"
+        android:layout_weight="1">
+
+        </TableRow>
+
+    <TableRow
+        android:background="@null"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_margin="1dp"
+        android:layout_weight="1">
+
+    </TableRow>
+
+
+  </TableLayout>
+
   <ImageView
       android:id="@+id/previewPane"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:layout_marginTop="200dp"
       android:layout_alignParentStart="true"
       android:layout_alignParentTop="true"
       android:scaleType="fitCenter"></ImageView>
@@ -34,12 +92,6 @@
       android:layout_alignParentBottom="true"
       android:layout_alignParentStart="true"
       android:background="#000">
-
-    <Spinner
-        android:id="@+id/featureSelector"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right" />
 
     <Button
 

@@ -17,6 +17,8 @@ import android.graphics.Bitmap;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.util.Log;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
@@ -24,8 +26,10 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
 import com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler;
 import com.google.firebase.samples.apps.mlkit.common.CameraImageGraphic;
+import com.google.firebase.samples.apps.mlkit.common.DatabaseLite;
 import com.google.firebase.samples.apps.mlkit.common.FrameMetadata;
 import com.google.firebase.samples.apps.mlkit.common.GraphicOverlay;
+import com.google.firebase.samples.apps.mlkit.java.Product;
 import com.google.firebase.samples.apps.mlkit.java.VisionProcessorBase;
 
 import java.io.IOException;
@@ -63,16 +67,24 @@ public class ImageLabelingProcessor extends VisionProcessorBase<List<FirebaseVis
             @Nullable Bitmap originalCameraImage,
             @NonNull List<FirebaseVisionImageLabel> labels,
             @NonNull FrameMetadata frameMetadata,
-            @NonNull GraphicOverlay graphicOverlay) {
+            @NonNull GraphicOverlay graphicOverlay,
+            @NonNull TableRow row) {
         graphicOverlay.clear();
         if (originalCameraImage != null) {
             CameraImageGraphic imageGraphic = new CameraImageGraphic(graphicOverlay, originalCameraImage);
             graphicOverlay.add(imageGraphic);
         }
+        if(!labels.isEmpty())
+        {
+            FirebaseVisionImageLabel label = labels.get(0);
+            List<Product> products = DatabaseLite.DBaseQc.QueryLabel(label.getText());
+            TextView tt = (TextView)row.getChildAt(1);
+            tt.setText(products.get(0).Desc);
+        }
         LabelGraphic labelGraphic = new LabelGraphic(graphicOverlay, labels);
-        graphicOverlay.add(labelGraphic);
-        graphicOverlay.postInvalidate();
-    }
+//        graphicOverlay.add(labelGraphic);
+//        graphicOverlay.postInvalidate();
+}
 
     @Override
     protected void onFailure(@NonNull Exception e) {

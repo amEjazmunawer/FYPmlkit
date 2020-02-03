@@ -13,6 +13,8 @@
 // limitations under the License.
 package com.google.firebase.samples.apps.mlkit.java;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.speech.tts.TextToSpeech;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -37,9 +39,12 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Spinner;
+import android.widget.TableRow;
+import android.widget.Toast;
 
 import com.google.android.gms.common.annotation.KeepName;
 import com.google.firebase.samples.apps.mlkit.R;
+import com.google.firebase.samples.apps.mlkit.common.DatabaseLite;
 import com.google.firebase.samples.apps.mlkit.common.GraphicOverlay;
 import com.google.firebase.samples.apps.mlkit.common.VisionImageProcessor;
 import com.google.firebase.samples.apps.mlkit.common.preference.SettingsActivity;
@@ -49,12 +54,19 @@ import com.google.firebase.samples.apps.mlkit.java.imagelabeling.ImageLabelingPr
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
+import static com.google.firebase.samples.apps.mlkit.common.DatabaseLite.DbaseEntry.TABLE_NAME;
+
 
 /** Activity demonstrating different image detector features with a still image from camera. */
 @KeepName
 public final class StillImageActivity extends AppCompatActivity {
 
   private static final String TAG = "StillImageActivity";
+
+  private TextToSpeech t1;
 
 
   private static final String LABEL_DETECTION= "Label Detect";
@@ -77,6 +89,7 @@ public final class StillImageActivity extends AppCompatActivity {
   private Button getImageButton;
   private ImageView preview;
   private GraphicOverlay graphicOverlay;
+  private TableRow row;
   private String selectedMode = LABEL_DETECTION;
   private String selectedSize = SIZE_PREVIEW;
 
@@ -94,6 +107,22 @@ public final class StillImageActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    Log.d(TAG, "Initialising Database:");
+    DatabaseLite.DBaseQc.initialise(getApplicationContext());
+
+
+
+
+
+
+    t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+      @Override
+      public void onInit(int status) {
+        if(status != TextToSpeech.ERROR) {
+          t1.setLanguage(Locale.UK);
+        }
+      }
+    });
     setContentView(R.layout.activity_still_image);
 
     getImageButton = findViewById(R.id.getImageButton);
@@ -120,6 +149,15 @@ public final class StillImageActivity extends AppCompatActivity {
                   }
                 });
 
+ //          getImageButton.setOnLongClickListener(new View.OnLongClickListener(){
+  //            @Override
+ //             public void onClick(View v) {
+  //              String toSpeak = "Take photo";
+ //               Toast.makeText(getApplicationContext(), toSpeak,Toast.LENGTH_SHORT).show();
+ //               t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+ //             }
+ //           });
+
             MenuInflater inflater = popup.getMenuInflater();
             inflater.inflate(R.menu.camera_button_menu, popup.getMenu());
             popup.show();
@@ -134,7 +172,11 @@ public final class StillImageActivity extends AppCompatActivity {
       Log.d(TAG, "graphicOverlay is null");
     }
 
-    populateFeatureSelector();
+    row = findViewById(R.id.resultRow1);
+    if (row == null) {
+      Log.d(TAG, "row is null");
+    }
+    //populateFeatureSelector();
 
 
     createImageProcessor();
@@ -180,31 +222,7 @@ public final class StillImageActivity extends AppCompatActivity {
     return super.onOptionsItemSelected(item);
   }
 
-  private void populateFeatureSelector() {
-    Spinner featureSpinner = findViewById(R.id.featureSelector);
-    List<String> options = new ArrayList<>();
-    options.add(LABEL_DETECTION);
-    // Creating adapter for featureSpinner
-    ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_style, options);
-    // Drop down layout style - list view with radio button
-    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    // attaching data adapter to spinner
-    featureSpinner.setAdapter(dataAdapter);
-    featureSpinner.setOnItemSelectedListener(
-        new OnItemSelectedListener() {
 
-          @Override
-          public void onItemSelected(
-                  AdapterView<?> parentView, View selectedItemView, int pos, long id) {
-            selectedMode = parentView.getItemAtPosition(pos).toString();
-            createImageProcessor();
-            tryReloadAndDetectInImage();
-          }
-
-          @Override
-          public void onNothingSelected(AdapterView<?> arg0) {}
-        });
-  }
 
 
 
@@ -290,7 +308,7 @@ public final class StillImageActivity extends AppCompatActivity {
       preview.setImageBitmap(resizedBitmap);
       bitmapForDetection = resizedBitmap;
 
-      imageProcessor.process(bitmapForDetection, graphicOverlay);
+      imageProcessor.process(bitmapForDetection, graphicOverlay, row);
     } catch (IOException e) {
       Log.e(TAG, "Error retrieving saved image");
     }
