@@ -88,7 +88,6 @@ public final class StillImageActivity extends AppCompatActivity {
 
   private Button getImageButton;
   private ImageView preview;
-  private GraphicOverlay graphicOverlay;
   private TableRow row;
   private String selectedMode = LABEL_DETECTION;
   private String selectedSize = SIZE_PREVIEW;
@@ -167,10 +166,10 @@ public final class StillImageActivity extends AppCompatActivity {
     if (preview == null) {
       Log.d(TAG, "Preview is null");
     }
-    graphicOverlay = findViewById(R.id.previewOverlay);
-    if (graphicOverlay == null) {
-      Log.d(TAG, "graphicOverlay is null");
-    }
+//    graphicOverlay = findViewById(R.id.previewOverlay);
+//    if (graphicOverlay == null) {
+//      Log.d(TAG, "graphicOverlay is null");
+//    }
 
     row = findViewById(R.id.resultRow1);
     if (row == null) {
@@ -282,7 +281,7 @@ public final class StillImageActivity extends AppCompatActivity {
       }
 
       // Clear the overlay first
-      graphicOverlay.clear();
+     // graphicOverlay.clear();
 
       Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
 
@@ -308,7 +307,7 @@ public final class StillImageActivity extends AppCompatActivity {
       preview.setImageBitmap(resizedBitmap);
       bitmapForDetection = resizedBitmap;
 
-      imageProcessor.process(bitmapForDetection, graphicOverlay, row);
+      imageProcessor.process(bitmapForDetection, row);
     } catch (IOException e) {
       Log.e(TAG, "Error retrieving saved image");
     }

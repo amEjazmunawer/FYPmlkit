@@ -67,12 +67,11 @@ public class ImageLabelingProcessor extends VisionProcessorBase<List<FirebaseVis
             @Nullable Bitmap originalCameraImage,
             @NonNull List<FirebaseVisionImageLabel> labels,
             @NonNull FrameMetadata frameMetadata,
-            @NonNull GraphicOverlay graphicOverlay,
             @NonNull TableRow row) {
-        graphicOverlay.clear();
+
         if (originalCameraImage != null) {
-            CameraImageGraphic imageGraphic = new CameraImageGraphic(graphicOverlay, originalCameraImage);
-            graphicOverlay.add(imageGraphic);
+            CameraImageGraphic imageGraphic = new CameraImageGraphic(originalCameraImage);
+
         }
         if(!labels.isEmpty())
         {
@@ -81,7 +80,7 @@ public class ImageLabelingProcessor extends VisionProcessorBase<List<FirebaseVis
             TextView tt = (TextView)row.getChildAt(1);
             tt.setText(products.get(0).Desc);
         }
-        LabelGraphic labelGraphic = new LabelGraphic(graphicOverlay, labels);
+        LabelGraphic labelGraphic = new LabelGraphic(labels);
 //        graphicOverlay.add(labelGraphic);
 //        graphicOverlay.postInvalidate();
 }

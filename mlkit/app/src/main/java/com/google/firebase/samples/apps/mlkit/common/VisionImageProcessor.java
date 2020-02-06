@@ -30,7 +30,7 @@ public interface VisionImageProcessor {
       throws FirebaseMLException;
 
   /** Processes the bitmap images. */
-  void process(Bitmap bitmap, GraphicOverlay graphicOverlay, TableRow row);
+  void process(Bitmap bitmap, TableRow row);
 
   /** Stops the underlying machine learning model and release resources. */
   void stop();

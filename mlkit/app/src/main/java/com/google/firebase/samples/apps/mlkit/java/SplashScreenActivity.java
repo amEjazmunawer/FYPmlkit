@@ -13,7 +13,7 @@ import com.google.firebase.samples.apps.mlkit.R;
 public class SplashScreenActivity extends AppCompatActivity {
 
     private TextToSpeech textToSpeechSystem;
-    private static int SPLASH_TIME_OUT = 4000;
+    private static int SPLASH_TIME_OUT = 3000;
 
     FragmentPagerAdapter adapterViewPager;
 
@@ -25,7 +25,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent homeIntent = new Intent(SplashScreenActivity.this, ChooserActivity.class);
+                Intent homeIntent = new Intent(SplashScreenActivity.this, StillImageActivity.class);
                 startActivity(homeIntent);
                 finish();
             }

@@ -34,7 +34,7 @@ import java.nio.ByteBuffer;
 
 /**
  * Abstract base class for ML Kit frame processors. Subclasses need to implement {@link
- * #onSuccess(Bitmap, Object, FrameMetadata, GraphicOverlay, TableRow)} to define what they want to with
+ * #onSuccess(Bitmap, Object, FrameMetadata, TableRow)} to define what they want to with
  * the detection results and {@link #detectInImage(FirebaseVisionImage)} to specify the detector
  * object.
  *
@@ -67,31 +67,28 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
         latestImage = data;
         latestImageMetaData = frameMetadata;
         if (processingImage == null && processingMetaData == null) {
-            processLatestImage(graphicOverlay, row);
+            processLatestImage( row);
         }
     }
 
     // Bitmap version
     @Override
-    public void process(Bitmap bitmap, final GraphicOverlay
-            graphicOverlay, TableRow row) {
-        detectInVisionImage(null /* bitmap */, FirebaseVisionImage.fromBitmap(bitmap), null,
-                graphicOverlay, row);
+    public void process(Bitmap bitmap, TableRow row) {
+        detectInVisionImage(null /* bitmap */, FirebaseVisionImage.fromBitmap(bitmap), null, row);
     }
 
-    private synchronized void processLatestImage(final GraphicOverlay graphicOverlay,final TableRow row) {
+    private synchronized void processLatestImage(final TableRow row) {
         processingImage = latestImage;
         processingMetaData = latestImageMetaData;
         latestImage = null;
         latestImageMetaData = null;
         if (processingImage != null && processingMetaData != null) {
-            processImage(processingImage, processingMetaData, graphicOverlay, row);
+            processImage(processingImage, processingMetaData, row);
         }
     }
 
     private void processImage(
             ByteBuffer data, final FrameMetadata frameMetadata,
-            final GraphicOverlay graphicOverlay,
             TableRow row) {
         FirebaseVisionImageMetadata metadata =
                 new FirebaseVisionImageMetadata.Builder()
@@ -104,14 +101,13 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
         Bitmap bitmap = BitmapUtils.getBitmap(data, frameMetadata);
         detectInVisionImage(
                 bitmap, FirebaseVisionImage.fromByteBuffer(data, metadata), frameMetadata,
-                graphicOverlay, row);
+                row);
     }
 
     private void detectInVisionImage(
             final Bitmap originalCameraImage,
             FirebaseVisionImage image,
             final FrameMetadata metadata,
-            final GraphicOverlay graphicOverlay,
             final TableRow row) {
         detectInImage(image)
                 .addOnSuccessListener(
@@ -120,9 +116,8 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
                             public void onSuccess(T results) {
                                 VisionProcessorBase.this.onSuccess(originalCameraImage, results,
                                         metadata,
-                                        graphicOverlay,
                                         row);
-                                processLatestImage(graphicOverlay, row);
+                                processLatestImage(row);
                             }
                         })
                 .addOnFailureListener(
@@ -150,7 +145,6 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
             @Nullable Bitmap originalCameraImage,
             @NonNull T results,
             @NonNull FrameMetadata frameMetadata,
-            @NonNull GraphicOverlay graphicOverlay,
             @NonNull TableRow row);
 
     protected abstract void onFailure(@NonNull Exception e);

@@ -12,7 +12,7 @@
 
   <TableLayout
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
+      android:layout_height="250dp"
       android:stretchColumns="0,1">
 
     <TableRow
@@ -24,12 +24,14 @@
         android:layout_weight="1">
 
       <ImageView
-
-          android:layout_width="match_parent"
+          android:id="@+id/previewPane"
+          android:layout_width="0dp"
           android:layout_height="match_parent"
-          >
-
-
+          android:layout_weight=".50"
+          android:layout_marginTop="0dp"
+          android:layout_alignParentStart="true"
+          android:layout_alignParentTop="true"
+          android:scaleType="fitCenter">
 
       </ImageView>
 
@@ -46,44 +48,36 @@
       </TextView>
     </TableRow>
 
-    <TableRow
-        android:background="@null"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_margin="1dp"
-        android:layout_weight="1">
+  </TableLayout>
 
-        </TableRow>
 
-    <TableRow
-        android:background="@null"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_margin="1dp"
-        android:layout_weight="1">
+<androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="60dp"
+  android:layout_marginTop="250dp" >
 
-    </TableRow>
+  <TableLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+
+
 
 
   </TableLayout>
 
-  <ImageView
-      android:id="@+id/previewPane"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_marginTop="200dp"
-      android:layout_alignParentStart="true"
-      android:layout_alignParentTop="true"
-      android:scaleType="fitCenter"></ImageView>
 
 
-  <com.google.firebase.samples.apps.mlkit.common.GraphicOverlay
-      android:id="@+id/previewOverlay"
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent"
-      android:layout_alignParentStart="true"
-      android:layout_alignParentTop="true"
-      android:layout_alignParentBottom="true"/>
+</androidx.core.widget.NestedScrollView>
+
+
+<!--  <com.google.firebase.samples.apps.mlkit.common.GraphicOverlay-->
+<!--      android:id="@+id/previewOverlay"-->
+<!--      android:layout_width="fill_parent"-->
+<!--      android:layout_height="fill_parent"-->
+<!--      android:layout_alignParentStart="true"-->
+<!--      android:layout_alignParentTop="true"-->
+<!--      android:layout_alignParentBottom="true"/>-->
 
   <FrameLayout
       android:id="@+id/controlPanel"
