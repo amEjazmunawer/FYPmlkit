@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -43,7 +44,10 @@ public class SplashScreenActivity extends AppCompatActivity {
                 if (status == TextToSpeech.SUCCESS) {
                     String textToSay = "Welcome!";
                     textToSpeechSystem.speak(textToSay, TextToSpeech.QUEUE_ADD, null);
+                    Toast.makeText(getApplicationContext(),
+                            textToSay, Toast.LENGTH_LONG).show();;
                 }
+
             }
         });
 

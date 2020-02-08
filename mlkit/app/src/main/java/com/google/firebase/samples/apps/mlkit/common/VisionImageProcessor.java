@@ -13,6 +13,7 @@
 // limitations under the License.
 package com.google.firebase.samples.apps.mlkit.common;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.media.Image;
 import android.widget.TableRow;
@@ -26,11 +27,11 @@ import java.nio.ByteBuffer;
 public interface VisionImageProcessor {
 
   /** Processes the images with the underlying machine learning models. */
-  void process(ByteBuffer data, FrameMetadata frameMetadata, GraphicOverlay graphicOverlay, TableRow row)
+  void process(ByteBuffer data, FrameMetadata frameMetadata, Activity activity)
       throws FirebaseMLException;
 
   /** Processes the bitmap images. */
-  void process(Bitmap bitmap, TableRow row);
+  void process(Bitmap bitmap, Activity activity);
 
   /** Stops the underlying machine learning model and release resources. */
   void stop();

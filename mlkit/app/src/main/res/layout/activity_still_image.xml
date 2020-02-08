@@ -16,7 +16,6 @@
       android:stretchColumns="0,1">
 
     <TableRow
-        android:id="@+id/resultRow1"
         android:background="@null"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
@@ -24,6 +23,7 @@
         android:layout_weight="1">
 
       <ImageView
+
           android:id="@+id/previewPane"
           android:layout_width="0dp"
           android:layout_height="match_parent"
@@ -40,9 +40,8 @@
           android:layout_width="50px"
           android:layout_height="match_parent"
           android:layout_column="1"
-          android:id="@+id/topcolumn"
-          android:gravity="center"
-          android:text="Test">
+          android:id="@+id/resultLabel"
+          android:gravity="center">
 
 
       </TextView>
@@ -55,11 +54,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="60dp"
-  android:layout_marginTop="250dp" >
+    android:layout_marginTop="250dp"
+    >
 
   <TableLayout
       android:layout_width="match_parent"
-      android:layout_height="match_parent">
+      android:layout_height="match_parent"
+      android:id="@+id/resultTable"
+      android:stretchColumns="0,1">
 
 
 
@@ -88,6 +90,7 @@
       android:background="#000">
 
     <Button
+
 
         android:id="@+id/getImageButton"
         android:layout_width="wrap_content"

@@ -13,18 +13,26 @@
 // limitations under the License.
 package com.google.firebase.samples.apps.mlkit.java.imagelabeling;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.os.AsyncTask;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
 import com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler;
+import com.google.firebase.samples.apps.mlkit.R;
 import com.google.firebase.samples.apps.mlkit.common.CameraImageGraphic;
 import com.google.firebase.samples.apps.mlkit.common.DatabaseLite;
 import com.google.firebase.samples.apps.mlkit.common.FrameMetadata;
@@ -33,19 +41,47 @@ import com.google.firebase.samples.apps.mlkit.java.Product;
 import com.google.firebase.samples.apps.mlkit.java.VisionProcessorBase;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 
 /**
  * Custom Image Classifier Demo.
  */
 public class ImageLabelingProcessor extends VisionProcessorBase<List<FirebaseVisionImageLabel>> {
-
+    public Activity activity;
     private static final String TAG = "ImageLabelingProcessor";
 
     private final FirebaseVisionImageLabeler detector;
 
     public ImageLabelingProcessor() {
         detector = FirebaseVision.getInstance().getOnDeviceImageLabeler();
+    }
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+
+                mIcon11 = Bitmap.createScaledBitmap(BitmapFactory.decodeStream(in), 300, 300, false) ;
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
     }
 
     @Override
@@ -67,8 +103,10 @@ public class ImageLabelingProcessor extends VisionProcessorBase<List<FirebaseVis
             @Nullable Bitmap originalCameraImage,
             @NonNull List<FirebaseVisionImageLabel> labels,
             @NonNull FrameMetadata frameMetadata,
-            @NonNull TableRow row) {
-
+            @NonNull Activity activity) {
+        TextView resultLabel = (TextView)activity.findViewById(R.id.resultLabel);
+        TableLayout resultTable = (TableLayout)activity.findViewById(R.id.resultTable);
+        resultTable.removeAllViews();
         if (originalCameraImage != null) {
             CameraImageGraphic imageGraphic = new CameraImageGraphic(originalCameraImage);
 
@@ -77,8 +115,39 @@ public class ImageLabelingProcessor extends VisionProcessorBase<List<FirebaseVis
         {
             FirebaseVisionImageLabel label = labels.get(0);
             List<Product> products = DatabaseLite.DBaseQc.QueryLabel(label.getText());
-            TextView tt = (TextView)row.getChildAt(1);
-            tt.setText(products.get(0).Desc);
+            //TextView tt = (TextView)row.getChildAt(1);
+            resultLabel.setText(label.getText()); //products.get(0).Desc);
+
+            for (Product p:
+                 products) {
+                TextView txt = new TextView(activity);
+                ImageView img = new ImageView(activity);
+                img.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                new DownloadImageTask(img).execute(p.Image);
+//                img.setLayoutParams(new ViewGroup.LayoutParams(100, 100));
+//                String urldisplay = p.Image;
+//                try {
+//                    InputStream in = new java.net.URL(urldisplay).openStream();
+//                    mIcon11 = BitmapFactory.decodeStream(in);
+//                } catch (Exception e) {
+//                    Log.e("Error", e.getMessage());
+//                    e.printStackTrace();
+//                }
+//                img.setImageBitmap(mIcon11);
+//                img.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                txt.setText(p.Desc);
+
+                TableRow row = new TableRow(activity);
+//                TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(10,10);
+                row.setLayoutParams(new TableRow.LayoutParams(100,100));
+                row.addView(img);
+                row.addView(txt);
+                resultTable.addView(row);
+//                resultTable.requestLayout();//
+
+
+            }
+
         }
         LabelGraphic labelGraphic = new LabelGraphic(labels);
 //        graphicOverlay.add(labelGraphic);

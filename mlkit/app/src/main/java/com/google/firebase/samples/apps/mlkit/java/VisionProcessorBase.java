@@ -13,6 +13,7 @@
 // limitations under the License.
 package com.google.firebase.samples.apps.mlkit.java;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.widget.TableRow;
 
@@ -34,7 +35,7 @@ import java.nio.ByteBuffer;
 
 /**
  * Abstract base class for ML Kit frame processors. Subclasses need to implement {@link
- * #onSuccess(Bitmap, Object, FrameMetadata, TableRow)} to define what they want to with
+ * #onSuccess(Bitmap, Object, FrameMetadata, Activity)} to define what they want to with
  * the detection results and {@link #detectInImage(FirebaseVisionImage)} to specify the detector
  * object.
  *
@@ -62,34 +63,33 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
 
     @Override
     public synchronized void process(
-            ByteBuffer data, final FrameMetadata frameMetadata, final GraphicOverlay
-            graphicOverlay, TableRow row) {
+            ByteBuffer data, final FrameMetadata frameMetadata, Activity activity) {
         latestImage = data;
         latestImageMetaData = frameMetadata;
         if (processingImage == null && processingMetaData == null) {
-            processLatestImage( row);
+            processLatestImage( activity);
         }
     }
 
     // Bitmap version
     @Override
-    public void process(Bitmap bitmap, TableRow row) {
-        detectInVisionImage(null /* bitmap */, FirebaseVisionImage.fromBitmap(bitmap), null, row);
+    public void process(Bitmap bitmap, Activity activity) {
+        detectInVisionImage(null /* bitmap */, FirebaseVisionImage.fromBitmap(bitmap), null, activity);
     }
 
-    private synchronized void processLatestImage(final TableRow row) {
+    private synchronized void processLatestImage(final Activity activity) {
         processingImage = latestImage;
         processingMetaData = latestImageMetaData;
         latestImage = null;
         latestImageMetaData = null;
         if (processingImage != null && processingMetaData != null) {
-            processImage(processingImage, processingMetaData, row);
+            processImage(processingImage, processingMetaData, activity);
         }
     }
 
     private void processImage(
             ByteBuffer data, final FrameMetadata frameMetadata,
-            TableRow row) {
+            Activity activity) {
         FirebaseVisionImageMetadata metadata =
                 new FirebaseVisionImageMetadata.Builder()
                         .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
@@ -101,14 +101,14 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
         Bitmap bitmap = BitmapUtils.getBitmap(data, frameMetadata);
         detectInVisionImage(
                 bitmap, FirebaseVisionImage.fromByteBuffer(data, metadata), frameMetadata,
-                row);
+                activity);
     }
 
     private void detectInVisionImage(
             final Bitmap originalCameraImage,
             FirebaseVisionImage image,
             final FrameMetadata metadata,
-            final TableRow row) {
+            final Activity activity) {
         detectInImage(image)
                 .addOnSuccessListener(
                         new OnSuccessListener<T>() {
@@ -116,8 +116,8 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
                             public void onSuccess(T results) {
                                 VisionProcessorBase.this.onSuccess(originalCameraImage, results,
                                         metadata,
-                                        row);
-                                processLatestImage(row);
+                                        activity);
+                                processLatestImage(activity);
                             }
                         })
                 .addOnFailureListener(
@@ -145,7 +145,7 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
             @Nullable Bitmap originalCameraImage,
             @NonNull T results,
             @NonNull FrameMetadata frameMetadata,
-            @NonNull TableRow row);
+            @NonNull Activity activity);
 
     protected abstract void onFailure(@NonNull Exception e);
 }

@@ -125,10 +125,10 @@ public final class StillImageActivity extends AppCompatActivity {
     setContentView(R.layout.activity_still_image);
 
     getImageButton = findViewById(R.id.getImageButton);
-    getImageButton.setOnClickListener(
-        new OnClickListener() {
+    getImageButton.setOnLongClickListener(
+        new View.OnLongClickListener() {
           @Override
-          public void onClick(View view) {
+          public boolean onLongClick(View view) {
             // Menu for selecting either: a) take new photo b) select from existing
             PopupMenu popup = new PopupMenu(StillImageActivity.this, view);
             popup.setOnMenuItemClickListener(
@@ -137,9 +137,13 @@ public final class StillImageActivity extends AppCompatActivity {
                   public boolean onMenuItemClick(MenuItem menuItem) {
                     switch (menuItem.getItemId()) {
                       case R.id.select_images_from_local:
+                        String textToSay = "Choose image from gallery!";
+                        t1.speak(textToSay, TextToSpeech.QUEUE_ADD, null);
                         startChooseImageIntentForResult();
                         return true;
                       case R.id.take_photo_using_camera:
+                        String textToSay1 = "Take a photo";
+                        t1.speak(textToSay1, TextToSpeech.QUEUE_ADD, null);
                         startCameraIntentForResult();
                         return true;
                       default:
@@ -148,18 +152,18 @@ public final class StillImageActivity extends AppCompatActivity {
                   }
                 });
 
- //          getImageButton.setOnLongClickListener(new View.OnLongClickListener(){
-  //            @Override
- //             public void onClick(View v) {
-  //              String toSpeak = "Take photo";
- //               Toast.makeText(getApplicationContext(), toSpeak,Toast.LENGTH_SHORT).show();
- //               t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
- //             }
- //           });
+           getImageButton.setOnClickListener(new View.OnClickListener(){
+              @Override
+              public void onClick(View v) {
+                startCameraIntentForResult();
+              }
+            });
+
 
             MenuInflater inflater = popup.getMenuInflater();
             inflater.inflate(R.menu.camera_button_menu, popup.getMenu());
             popup.show();
+            return false;
           }
         });
     preview = findViewById(R.id.previewPane);
@@ -170,11 +174,11 @@ public final class StillImageActivity extends AppCompatActivity {
 //    if (graphicOverlay == null) {
 //      Log.d(TAG, "graphicOverlay is null");
 //    }
-
-    row = findViewById(R.id.resultRow1);
-    if (row == null) {
-      Log.d(TAG, "row is null");
-    }
+//
+//    row = findViewById(R.id.resultRow1);
+//    if (row == null) {
+//      Log.d(TAG, "row is null");
+//    }
     //populateFeatureSelector();
 
 
@@ -307,7 +311,7 @@ public final class StillImageActivity extends AppCompatActivity {
       preview.setImageBitmap(resizedBitmap);
       bitmapForDetection = resizedBitmap;
 
-      imageProcessor.process(bitmapForDetection, row);
+      imageProcessor.process(bitmapForDetection, this);
     } catch (IOException e) {
       Log.e(TAG, "Error retrieving saved image");
     }
