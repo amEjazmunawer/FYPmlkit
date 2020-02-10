@@ -14,11 +14,13 @@
 package com.google.firebase.samples.apps.mlkit.java.imagelabeling;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import android.graphics.BitmapFactory;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -45,6 +47,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
+import static android.view.View.TEXT_ALIGNMENT_CENTER;
+
 /**
  * Custom Image Classifier Demo.
  */
@@ -53,6 +57,12 @@ public class ImageLabelingProcessor extends VisionProcessorBase<List<FirebaseVis
     private static final String TAG = "ImageLabelingProcessor";
 
     private final FirebaseVisionImageLabeler detector;
+
+    public int getScreenWidth(Context context) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity)context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.widthPixels;
+    }
 
     public ImageLabelingProcessor() {
         detector = FirebaseVision.getInstance().getOnDeviceImageLabeler();
@@ -113,45 +123,38 @@ public class ImageLabelingProcessor extends VisionProcessorBase<List<FirebaseVis
         }
         if(!labels.isEmpty())
         {
-            FirebaseVisionImageLabel label = labels.get(0);
-            List<Product> products = DatabaseLite.DBaseQc.QueryLabel(label.getText());
-            //TextView tt = (TextView)row.getChildAt(1);
-            resultLabel.setText(label.getText()); //products.get(0).Desc);
+            String label = new String();
+
+            List<Product> products = DatabaseLite.DBaseQc.QueryLabel(labels.get(0).getText());
+            for (FirebaseVisionImageLabel label1:
+                    labels) {
+                label += label1.getText() + "\n";
+            }
+            resultLabel.setText(label);
 
             for (Product p:
                  products) {
-                TextView txt = new TextView(activity);
+
                 ImageView img = new ImageView(activity);
                 img.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 new DownloadImageTask(img).execute(p.Image);
-//                img.setLayoutParams(new ViewGroup.LayoutParams(100, 100));
-//                String urldisplay = p.Image;
-//                try {
-//                    InputStream in = new java.net.URL(urldisplay).openStream();
-//                    mIcon11 = BitmapFactory.decodeStream(in);
-//                } catch (Exception e) {
-//                    Log.e("Error", e.getMessage());
-//                    e.printStackTrace();
-//                }
-//                img.setImageBitmap(mIcon11);
-//                img.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+
+                TextView txt = new TextView(activity);
                 txt.setText(p.Desc);
+                txt.setTextAlignment(TEXT_ALIGNMENT_CENTER);
+//                txt.getLayoutParams().width = (int) (getScreenWidth(activity) * 0.8);
 
                 TableRow row = new TableRow(activity);
-//                TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(10,10);
-                row.setLayoutParams(new TableRow.LayoutParams(100,100));
+                TableLayout.LayoutParams param = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,300);
+                param.setMargins(50,50,50,0);
+                row.setLayoutParams(param);
                 row.addView(img);
                 row.addView(txt);
                 resultTable.addView(row);
-//                resultTable.requestLayout();//
-
 
             }
 
         }
-        LabelGraphic labelGraphic = new LabelGraphic(labels);
-//        graphicOverlay.add(labelGraphic);
-//        graphicOverlay.postInvalidate();
 }
 
     @Override

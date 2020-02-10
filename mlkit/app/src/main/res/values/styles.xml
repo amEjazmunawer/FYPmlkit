@@ -1,17 +1,17 @@
 <resources>
 
-    <!-- Light mode theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">#2196F3</item>
-        <item name="colorPrimaryDark">#1976D2</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="backgroundcolour">#FAFAFA</item>
-        <item name="cardbackground">#ffffff</item>
-        <item name="textcolour">#808080</item>
-        <item name="tintcolour">#000000</item>
-        <item name="buttoncolour">#2196F3</item>
-    </style>
+<!--    &lt;!&ndash; Light mode theme. &ndash;&gt;-->
+<!--    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">-->
+<!--        &lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+<!--        <item name="colorPrimary">#2196F3</item>-->
+<!--        <item name="colorPrimaryDark">#1976D2</item>-->
+<!--        <item name="colorAccent">@color/colorAccent</item>-->
+<!--        <item name="backgroundcolour">#FAFAFA</item>-->
+<!--        <item name="cardbackground">#ffffff</item>-->
+<!--        <item name="textcolour">#808080</item>-->
+<!--        <item name="tintcolour">#000000</item>-->
+<!--        <item name="buttoncolour">#2196F3</item>-->
+<!--    </style>-->
 
     <!-- Night mode theme. -->
     <style name="DarkTheme" parent="Theme.AppCompat.Light.NoActionBar">
