@@ -12,9 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 package com.google.firebase.samples.apps.mlkit.java;
-
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.speech.tts.TextToSpeech;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -31,6 +39,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -38,7 +47,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
-import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.Toast;
 
@@ -67,6 +75,9 @@ public final class StillImageActivity extends AppCompatActivity {
   private static final String TAG = "StillImageActivity";
 
   private TextToSpeech t1;
+  private Animator currentAnimator;
+  private int shortAnimationDuration;
+
 
 
   private static final String LABEL_DETECTION= "Label Detect";
@@ -88,6 +99,7 @@ public final class StillImageActivity extends AppCompatActivity {
 
   private Button getImageButton;
   private ImageView preview;
+  private ImageView prev2;
   private TableRow row;
   private String selectedMode = LABEL_DETECTION;
   private String selectedSize = SIZE_PREVIEW;
@@ -105,6 +117,7 @@ public final class StillImageActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
 
     Log.d(TAG, "Initialising Database:");
     DatabaseLite.DBaseQc.initialise(getApplicationContext());
@@ -166,10 +179,22 @@ public final class StillImageActivity extends AppCompatActivity {
             return false;
           }
         });
-    preview = findViewById(R.id.previewPane);
+     preview = findViewById(R.id.previewPane);
     if (preview == null) {
       Log.d(TAG, "Preview is null");
     }
+
+
+//      prev2 = findViewById(R.id.expanded_image);
+//    preview.setOnClickListener(new View.OnClickListener() {
+//      @Override
+//      public void onClick(View view) {
+//        zoomImageFromThumb(preview, R.id.previewPane);
+//      }
+//    });
+
+
+
 //    graphicOverlay = findViewById(R.id.previewOverlay);
 //    if (graphicOverlay == null) {
 //      Log.d(TAG, "graphicOverlay is null");
@@ -387,4 +412,11 @@ public final class StillImageActivity extends AppCompatActivity {
         throw new IllegalStateException("Unknown selectedMode: " + selectedMode);
     }
   }
+
+
+
+
+
+
+
 }

@@ -15,15 +15,26 @@ package com.google.firebase.samples.apps.mlkit.java.imagelabeling;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.net.Uri;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -113,10 +124,14 @@ public class ImageLabelingProcessor extends VisionProcessorBase<List<FirebaseVis
             @Nullable Bitmap originalCameraImage,
             @NonNull List<FirebaseVisionImageLabel> labels,
             @NonNull FrameMetadata frameMetadata,
-            @NonNull Activity activity) {
+            @NonNull final Activity activity) {
         TextView resultLabel = (TextView)activity.findViewById(R.id.resultLabel);
-        TableLayout resultTable = (TableLayout)activity.findViewById(R.id.resultTable);
-        resultTable.removeAllViews();
+
+        LinearLayout lyl = activity.findViewById(R.id.resultLayout);
+        lyl.removeAllViews();
+
+//        TableLayout resultTable = (TableLayout)activity.findViewById(R.id.resultTable);
+//        resultTable.removeAllViews();
         if (originalCameraImage != null) {
             CameraImageGraphic imageGraphic = new CameraImageGraphic(originalCameraImage);
 
@@ -124,34 +139,88 @@ public class ImageLabelingProcessor extends VisionProcessorBase<List<FirebaseVis
         if(!labels.isEmpty())
         {
             String label = new String();
-
-            List<Product> products = DatabaseLite.DBaseQc.QueryLabel(labels.get(0).getText());
+            String[] labelsArray = new String[labels.size()];
+            Integer a=0;
+            for (FirebaseVisionImageLabel lab: labels)
+            {
+                labelsArray[a]=lab.getText();
+                a++;
+            }
+            //labels.toArray(labelsArray);
+            List<Product> products = DatabaseLite.DBaseQc.QueryLabel(labelsArray);
             for (FirebaseVisionImageLabel label1:
                     labels) {
                 label += label1.getText() + "\n";
             }
             resultLabel.setText(label);
 
-            for (Product p:
+            for (final Product p:
                  products) {
 
+                Bitmap image = Bitmap.createBitmap(300 , 300, Bitmap.Config.ARGB_8888);
+                image.eraseColor(Color.BLACK);
+
                 ImageView img = new ImageView(activity);
+                img.setImageBitmap(image);
                 img.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 new DownloadImageTask(img).execute(p.Image);
 
+
+//                Button btn = new Button(activity);
+//                btn.setText(p.Desc);
+//                btn.setOnClickListener(new View.OnClickListener(){
+//
+//
+//                    @Override
+//                    public void onClick(View v) {
+//                        Uri uriUrl = Uri.parse(p.Link);
+//                        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+//                        activity.startActivity(launchBrowser);
+//
+//                    }
+//                });
+////
                 TextView txt = new TextView(activity);
                 txt.setText(p.Desc);
-                txt.setTextAlignment(TEXT_ALIGNMENT_CENTER);
+                txt.setClickable(true);
+                txt.setMovementMethod(LinkMovementMethod.getInstance());
+               LinearLayout.LayoutParams paramLy = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
+
+                txt.setGravity(Gravity.CENTER);
+                txt.setLayoutParams(paramLy);
+
+txt.setOnClickListener(new View.OnClickListener(){
+
+
+    @Override
+    public void onClick(View v) {
+        Uri uriUrl = Uri.parse(p.Link);
+        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+        activity.startActivity(launchBrowser);
+
+    }
+});
+
+
+
+                LinearLayout lylrow = new LinearLayout(activity);
+                LinearLayout.LayoutParams params4 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                params4.setMargins(50,50,50,0);
+                lylrow.setLayoutParams(params4);
 //                txt.getLayoutParams().width = (int) (getScreenWidth(activity) * 0.8);
 
-                TableRow row = new TableRow(activity);
-                TableLayout.LayoutParams param = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,300);
-                param.setMargins(50,50,50,0);
-                row.setLayoutParams(param);
-                row.addView(img);
-                row.addView(txt);
-                resultTable.addView(row);
+//                TableRow row = new TableRow(activity);
+//                TableLayout.LayoutParams param3 = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,300);
+//                param3.setMargins(50,50,50,0);
+////                param.weight1.0f;
+//                row.setLayoutParams(param3);
+//                row.addView(img);
+//                row.addView(txt);
 
+               // resultTable.addView(row);
+                lylrow.addView(img);
+                lylrow.addView(txt);
+                lyl.addView(lylrow);
             }
 
         }

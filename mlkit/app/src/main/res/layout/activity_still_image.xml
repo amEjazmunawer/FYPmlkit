@@ -31,7 +31,8 @@
           android:layout_marginTop="0dp"
           android:layout_alignParentStart="true"
           android:layout_alignParentTop="true"
-          android:scaleType="fitCenter">
+          android:scaleType="fitCenter"
+          android:src="@drawable/sm_butttt">
 
       </ImageView>
 
@@ -70,7 +71,6 @@
 
   </TableLayout>
 
-
 <androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -78,16 +78,38 @@
     android:layout_marginTop="200dp"
     android:background="@drawable/border">
 
-  <TableLayout
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:id="@+id/resultTable"
-      android:stretchColumns="0,1">
+      android:orientation="vertical"
+      android:id="@+id/resultLayout">
+
+
+  </LinearLayout>
+
+<!--  <TableLayout-->
+<!--      android:layout_width="match_parent"-->
+<!--      android:layout_height="match_parent"-->
+<!--      android:id="@+id/resultTable">-->
+<!--&lt;!&ndash;    <TableRow >&ndash;&gt;-->
+
+<!--&lt;!&ndash;      <ImageView android:src="@drawable/sm_butttt"&ndash;&gt;-->
+<!--&lt;!&ndash;       android:layout_width="0dp"&ndash;&gt;-->
+<!--&lt;!&ndash;          android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;          android:layout_weight="6">&ndash;&gt;-->
+<!--&lt;!&ndash;      </ImageView>&ndash;&gt;-->
+
+<!--&lt;!&ndash;      <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;          android:text="sadsdasdas"&ndash;&gt;-->
+<!--&lt;!&ndash;          android:layout_weight="7">&ndash;&gt;-->
+<!--&lt;!&ndash;      </TextView>&ndash;&gt;-->
+<!--&lt;!&ndash;    </TableRow>&ndash;&gt;-->
 
 
 
 
-  </TableLayout>
+
+<!--  </TableLayout>-->
 
 
 

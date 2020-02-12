@@ -14,7 +14,7 @@ import com.google.firebase.samples.apps.mlkit.R;
 public class SplashScreenActivity extends AppCompatActivity {
 
     private TextToSpeech textToSpeechSystem;
-    private static int SPLASH_TIME_OUT = 3000;
+    private static int SPLASH_TIME_OUT = 1000;
 
     FragmentPagerAdapter adapterViewPager;
 

@@ -82,7 +82,7 @@ public final class DatabaseLite {
 
         public static Context cont;
 
-        public static List<Product>  QueryLabel(String label) {
+        public static List<Product>  QueryLabel(String[] label) {
 
             FeedReaderDbHelper dbHelper = new FeedReaderDbHelper(cont);
 
@@ -100,8 +100,14 @@ public final class DatabaseLite {
             };
 
 // Filter results WHERE "title" = 'My Title'
-            String selection = DbaseEntry.COLUMN_NAME_LABEL + " = ?" ;
-            String[] selectionArgs = { label };
+            String selection = "";
+            for(int i=0; i<label.length-1;++i)
+            {
+                selection += DbaseEntry.COLUMN_NAME_LABEL + " = ? OR " ;
+            }
+            selection += DbaseEntry.COLUMN_NAME_LABEL + " = ?";
+//            String[] selectionArgs = new String[label.size()];
+//            label.toArray(selectionArgs);
 
 // How you want the results sorted in the resulting Cursor
             String sortOrder =
@@ -111,7 +117,7 @@ public final class DatabaseLite {
                     DbaseEntry.TABLE_NAME,   // The table to query
                     projection,             // The array of columns to return (pass null to get all)
                     selection,              // The columns for the WHERE clause
-                    selectionArgs,          // The values for the WHERE clause
+                    label,          // The values for the WHERE clause
                     null,                   // don't group the rows
                     null,                   // don't filter by row groups
                     sortOrder               // The sort order
@@ -177,7 +183,7 @@ public final class DatabaseLite {
             products.add(new Product("https://my-live-01.slatic.net/original/22011b4a201f40d918bb57ca656a643b.jpg","Mobile phone","iPhone XR","What you still get is the same general iPhone X series design, the same powerful A12 Bionic chipset from the XS, the same TrueDepth camera  and the single camera on the back is the main 12MP sensor. ","https://www.gsmarena.com/apple_iphone_xr-9320.php"));
             products.add(new Product("https://images-na.ssl-images-amazon.com/images/I/81QpkIctqPL._AC_SL1500_.jpg","Monitor","Acer SB220Q","Acer SB220Q bi 21.5\" Full HD (1920 x 1080) IPS Ultra-Thin Zero Frame Monitor (HDMI & VGA Port) ","https://www.newegg.com/acer-sb220q-bi-21-5/p/0JC-000P-00AT1"));
             products.add(new Product("http://www.marigold.com.my/assets/images/contents/products/milk/hl-milk/showcase/low-fat-milk/strawberry/full.jpg","Milk","HL Strawb","MARIGOLD HL Low Fat Milk is more than just ordinary milk. It is high in calcium and protein while low in fat and lactose, also fortified with the 9 essential vitamins.","http://www.marigold.com.my/products/milk/hl-milk.html"));
-            products.add(new Product("https://my-test-11.slatic.net/p/1249e55443f3d3901359601f2035b6a9.jpg","Watch","Apple Watch 5","Glass front (Sapphire crystal), ceramic/sapphire crystal back, stainless steel frame","https://www.gsmarena.com/apple_watch_series_5-9859.php"));
+            products.add(new Product("https://my-test-11.slatic.net/p/1249e55443f3d3901359601f2035b6a9.jpg","Clock","Apple Watch 5","Glass front (Sapphire crystal), ceramic/sapphire crystal back, stainless steel frame","https://www.gsmarena.com/apple_watch_series_5-9859.php"));
             products.add(new Product("https://images-na.ssl-images-amazon.com/images/I/61SVEUsMepL._AC_SX522_.jpg","Mobile phone","Samsung Galaxy A20","To go with the bigger display, battery capacity has been bumped to 4,000mAh, and the phone has gotten heavier in the process, but at 169g it's still among the lighter offerings.","https://www.gsmarena.com/samsung_galaxy_a20-9640.php"));
             products.add(new Product("https://fdn2.gsmarena.com/vv/bigpic/motorola-razr-2019-.jpg","Mobile phone","Motorola RAZR Fold","Folding screen smartphone, released in the year 2020 with good Moto branding","https://www.gsmarena.com/motorola_razr_2019-9630.php"));
 
