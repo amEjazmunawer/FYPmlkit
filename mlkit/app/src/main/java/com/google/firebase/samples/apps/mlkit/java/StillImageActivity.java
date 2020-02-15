@@ -12,18 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 package com.google.firebase.samples.apps.mlkit.java;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.speech.tts.TextToSpeech;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -38,54 +27,29 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
-import android.widget.TableRow;
-import android.widget.Toast;
 
 import com.google.android.gms.common.annotation.KeepName;
 import com.google.firebase.samples.apps.mlkit.R;
 import com.google.firebase.samples.apps.mlkit.common.DatabaseLite;
-import com.google.firebase.samples.apps.mlkit.common.GraphicOverlay;
 import com.google.firebase.samples.apps.mlkit.common.VisionImageProcessor;
 import com.google.firebase.samples.apps.mlkit.common.preference.SettingsActivity;
 import com.google.firebase.samples.apps.mlkit.common.preference.SettingsActivity.LaunchSource;
 import com.google.firebase.samples.apps.mlkit.java.imagelabeling.ImageLabelingProcessor;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import static androidx.constraintlayout.widget.Constraints.TAG;
-import static com.google.firebase.samples.apps.mlkit.common.DatabaseLite.DbaseEntry.TABLE_NAME;
-
 
 /** Activity demonstrating different image detector features with a still image from camera. */
 @KeepName
 public final class StillImageActivity extends AppCompatActivity {
 
   private static final String TAG = "StillImageActivity";
-
-  private TextToSpeech t1;
-  private Animator currentAnimator;
-  private int shortAnimationDuration;
-
-
-
   private static final String LABEL_DETECTION= "Label Detect";
-
   private static final String SIZE_PREVIEW = "w:max"; // Available on-screen width.
   private static final String SIZE_1024_768 = "w:1024"; // ~1024*768 in a normal ratio
   private static final String SIZE_640_480 = "w:640"; // ~640*480 in a normal ratio
-
   private static final String KEY_IMAGE_URI = "com.googletest.firebase.ml.demo.KEY_IMAGE_URI";
   private static final String KEY_IMAGE_MAX_WIDTH =
       "com.googletest.firebase.ml.demo.KEY_IMAGE_MAX_WIDTH";
@@ -99,10 +63,9 @@ public final class StillImageActivity extends AppCompatActivity {
 
   private Button getImageButton;
   private ImageView preview;
-  private ImageView prev2;
-  private TableRow row;
   private String selectedMode = LABEL_DETECTION;
   private String selectedSize = SIZE_PREVIEW;
+
 
   boolean isLandScape;
 
@@ -122,19 +85,6 @@ public final class StillImageActivity extends AppCompatActivity {
     Log.d(TAG, "Initialising Database:");
     DatabaseLite.DBaseQc.initialise(getApplicationContext());
 
-
-
-
-
-
-    t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-      @Override
-      public void onInit(int status) {
-        if(status != TextToSpeech.ERROR) {
-          t1.setLanguage(Locale.UK);
-        }
-      }
-    });
     setContentView(R.layout.activity_still_image);
 
     getImageButton = findViewById(R.id.getImageButton);
@@ -151,12 +101,13 @@ public final class StillImageActivity extends AppCompatActivity {
                     switch (menuItem.getItemId()) {
                       case R.id.select_images_from_local:
                         String textToSay = "Choose image from gallery!";
-                        t1.speak(textToSay, TextToSpeech.QUEUE_ADD, null);
+                        speech.speak(textToSay);
                         startChooseImageIntentForResult();
                         return true;
                       case R.id.take_photo_using_camera:
                         String textToSay1 = "Take a photo";
-                        t1.speak(textToSay1, TextToSpeech.QUEUE_ADD, null);
+                        speech.speak(textToSay1);
+
                         startCameraIntentForResult();
                         return true;
                       default:
@@ -183,29 +134,6 @@ public final class StillImageActivity extends AppCompatActivity {
     if (preview == null) {
       Log.d(TAG, "Preview is null");
     }
-
-
-//      prev2 = findViewById(R.id.expanded_image);
-//    preview.setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View view) {
-//        zoomImageFromThumb(preview, R.id.previewPane);
-//      }
-//    });
-
-
-
-//    graphicOverlay = findViewById(R.id.previewOverlay);
-//    if (graphicOverlay == null) {
-//      Log.d(TAG, "graphicOverlay is null");
-//    }
-//
-//    row = findViewById(R.id.resultRow1);
-//    if (row == null) {
-//      Log.d(TAG, "row is null");
-//    }
-    //populateFeatureSelector();
-
 
     createImageProcessor();
 
@@ -309,22 +237,11 @@ public final class StillImageActivity extends AppCompatActivity {
         return;
       }
 
-      // Clear the overlay first
-     // graphicOverlay.clear();
-
       Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
 
-      // Get the dimensions of the View
-      Pair<Integer, Integer> targetedSize = getTargetedWidthHeight();
-
-      int targetWidth = targetedSize.first;
-      int maxHeight = targetedSize.second;
 
       // Determine how much to scale down the image
       float scaleFactor = 1;
-         // Math.max(
-           //   (float) imageBitmap.getWidth() / (float) targetWidth,
-            //  (float) imageBitmap.getHeight() / (float) maxHeight);
 
       Bitmap resizedBitmap =
           Bitmap.createScaledBitmap(
@@ -412,11 +329,5 @@ public final class StillImageActivity extends AppCompatActivity {
         throw new IllegalStateException("Unknown selectedMode: " + selectedMode);
     }
   }
-
-
-
-
-
-
 
 }

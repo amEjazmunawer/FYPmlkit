@@ -9,7 +9,6 @@
     android:background="#000"
     android:keepScreenOn="true">
 
-
   <TableLayout
       android:layout_width="match_parent"
       android:layout_height="200dp"
@@ -64,7 +63,6 @@
 
         </TextView>
 
-
       </LinearLayout>
 
     </TableRow>
@@ -76,53 +74,19 @@
     android:layout_height="match_parent"
     android:layout_marginBottom="60dp"
     android:layout_marginTop="200dp"
-    android:background="@drawable/border">
+    android:background="@drawable/border"
+    android:id="@+id/clickplsxd">
 
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical"
-      android:id="@+id/resultLayout">
-
+      android:id="@+id/resultLayout"
+      >
 
   </LinearLayout>
 
-<!--  <TableLayout-->
-<!--      android:layout_width="match_parent"-->
-<!--      android:layout_height="match_parent"-->
-<!--      android:id="@+id/resultTable">-->
-<!--&lt;!&ndash;    <TableRow >&ndash;&gt;-->
-
-<!--&lt;!&ndash;      <ImageView android:src="@drawable/sm_butttt"&ndash;&gt;-->
-<!--&lt;!&ndash;       android:layout_width="0dp"&ndash;&gt;-->
-<!--&lt;!&ndash;          android:layout_height="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;          android:layout_weight="6">&ndash;&gt;-->
-<!--&lt;!&ndash;      </ImageView>&ndash;&gt;-->
-
-<!--&lt;!&ndash;      <TextView&ndash;&gt;-->
-<!--&lt;!&ndash;          android:text="sadsdasdas"&ndash;&gt;-->
-<!--&lt;!&ndash;          android:layout_weight="7">&ndash;&gt;-->
-<!--&lt;!&ndash;      </TextView>&ndash;&gt;-->
-<!--&lt;!&ndash;    </TableRow>&ndash;&gt;-->
-
-
-
-
-
-<!--  </TableLayout>-->
-
-
-
 </androidx.core.widget.NestedScrollView>
-
-
-<!--  <com.google.firebase.samples.apps.mlkit.common.GraphicOverlay-->
-<!--      android:id="@+id/previewOverlay"-->
-<!--      android:layout_width="fill_parent"-->
-<!--      android:layout_height="fill_parent"-->
-<!--      android:layout_alignParentStart="true"-->
-<!--      android:layout_alignParentTop="true"-->
-<!--      android:layout_alignParentBottom="true"/>-->
 
   <FrameLayout
       android:id="@+id/controlPanel"

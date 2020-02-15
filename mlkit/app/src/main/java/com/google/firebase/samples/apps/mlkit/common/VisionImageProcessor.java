@@ -15,12 +15,7 @@ package com.google.firebase.samples.apps.mlkit.common;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.media.Image;
-import android.widget.TableRow;
-
 import com.google.firebase.ml.common.FirebaseMLException;
-import com.google.firebase.ml.vision.common.FirebaseVisionImage;
-
 import java.nio.ByteBuffer;
 
 /** An inferface to process the images with different ML Kit detectors and custom image models. */

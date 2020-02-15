@@ -1,25 +1,14 @@
 package com.google.firebase.samples.apps.mlkit.common;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.google.firebase.samples.apps.mlkit.java.Product;
-
-import java.util.AbstractList;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-
 import static com.google.firebase.samples.apps.mlkit.common.DatabaseLite.DbaseEntry.TABLE_NAME;
 
 public final class DatabaseLite {
@@ -28,15 +17,12 @@ public final class DatabaseLite {
     private static final String TAG ="DatabaseLite";
     public static class DbaseEntry implements BaseColumns {
 
-
-
         public static final String TABLE_NAME = "Products";
         public static final String COLUMN_NAME_IMAGE = "image";
         public static final String COLUMN_NAME_LABEL = "label";
         public static final String COLUMN_NAME_DESC = "description";
         public static final String COLUMN_NAME_INFO = "information";
         public static final String COLUMN_NAME_LINK = "weblink";
-
     }
 
     private static final String SQL_CREATE_ENTRIES =
@@ -48,10 +34,8 @@ public final class DatabaseLite {
                     DbaseEntry.COLUMN_NAME_INFO + " TEXT,"   +
                     DbaseEntry.COLUMN_NAME_LINK + " TEXT)";
 
-
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + DbaseEntry.TABLE_NAME;
-
 
     public static class FeedReaderDbHelper extends SQLiteOpenHelper {
 
@@ -77,19 +61,15 @@ public final class DatabaseLite {
 
     }
 
-
     public static class DBaseQc {
 
         public static Context cont;
-
         public static List<Product>  QueryLabel(String[] label) {
-
             FeedReaderDbHelper dbHelper = new FeedReaderDbHelper(cont);
-
             SQLiteDatabase dbRead = dbHelper.getReadableDatabase();
 
-// Define a projection that specifies which columns from the database
-// you will actually use after this query.
+            // Define a projection that specifies which columns from the database
+            // you will actually use after this query.
             String[] projection = {
                     BaseColumns._ID,
                     DbaseEntry.COLUMN_NAME_IMAGE,
@@ -99,17 +79,15 @@ public final class DatabaseLite {
                     DbaseEntry.COLUMN_NAME_LINK
             };
 
-// Filter results WHERE "title" = 'My Title'
+            // Filter results WHERE "title" = 'My Title'
             String selection = "";
             for(int i=0; i<label.length-1;++i)
             {
                 selection += DbaseEntry.COLUMN_NAME_LABEL + " = ? OR " ;
             }
             selection += DbaseEntry.COLUMN_NAME_LABEL + " = ?";
-//            String[] selectionArgs = new String[label.size()];
-//            label.toArray(selectionArgs);
 
-// How you want the results sorted in the resulting Cursor
+            // How you want the results sorted in the resulting Cursor
             String sortOrder =
                     DbaseEntry.COLUMN_NAME_DESC ;
 
@@ -124,12 +102,7 @@ public final class DatabaseLite {
             );
 
             List<Product> products = new ArrayList<>();
-//            List itemIds = new ArrayList<>();
             while(cursor.moveToNext()) {
-//                long itemId = cursor.getLong(
-//                        cursor.getColumnIndexOrThrow(DbaseEntry._ID));
-//                cursor.
-//                itemIds.add(itemId);
                 products.add(new Product(cursor.getString(cursor.getColumnIndexOrThrow(DbaseEntry.COLUMN_NAME_IMAGE)),
                                         cursor.getString(cursor.getColumnIndexOrThrow(DbaseEntry.COLUMN_NAME_LABEL)),
                                         cursor.getString(cursor.getColumnIndexOrThrow(DbaseEntry.COLUMN_NAME_DESC)),
@@ -167,15 +140,6 @@ public final class DatabaseLite {
             {
                 Log.d(TAG, "Column name:" +column);
             }
-
-// Create a new map of values, where column names are the keys
-//              ContentValues values = new ContentValues();
-//             values.put(DatabaseLite.DbaseEntry.COLUMN_NAME_IMAGE, "insertedimage");
-//              values.put(DatabaseLite.DbaseEntry.COLUMN_NAME_LABEL, "labeltesting");
-//               values.put(DatabaseLite.DbaseEntry.COLUMN_NAME_DESC, "testdescription");
-
-//               values.put(DatabaseLite.DbaseEntry.COLUMN_NAME_LINK, "lonkponk");
-
             List<Product> products = new ArrayList<>();
 
             products.add(new Product("https://my-test-11.slatic.net/p/6681aff3a5a7f8762965de8ccdaec11e.jpg","Mobile phone","Realme5","The Realme 5 is the bigger phone of the duo due to its larger 6.5\" display and beefier 5,000 mAh battery.","https://www.gsmarena.com/realme_5-9802.php"));
@@ -187,27 +151,12 @@ public final class DatabaseLite {
             products.add(new Product("https://images-na.ssl-images-amazon.com/images/I/61SVEUsMepL._AC_SX522_.jpg","Mobile phone","Samsung Galaxy A20","To go with the bigger display, battery capacity has been bumped to 4,000mAh, and the phone has gotten heavier in the process, but at 169g it's still among the lighter offerings.","https://www.gsmarena.com/samsung_galaxy_a20-9640.php"));
             products.add(new Product("https://fdn2.gsmarena.com/vv/bigpic/motorola-razr-2019-.jpg","Mobile phone","Motorola RAZR Fold","Folding screen smartphone, released in the year 2020 with good Moto branding","https://www.gsmarena.com/motorola_razr_2019-9630.php"));
 
-            //Product p = new Product("imagelink","imagelink","imagelink","imagelink");
-// Insert the new row, returning the primary key value of the new row
-
             for (Product p:products) {
-
                 long newRowId = dbWrite.insert(TABLE_NAME, null, p.getContentValues());
                 Log.d(TAG, "New row ID is :" + newRowId);
 
             }
-
-
-
-
-
         }
-
-
-
     }
-
-
-
 
 }

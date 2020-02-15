@@ -23,20 +23,14 @@ import androidx.annotation.Nullable;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
-import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.os.AsyncTask;
 
@@ -49,22 +43,19 @@ import com.google.firebase.samples.apps.mlkit.R;
 import com.google.firebase.samples.apps.mlkit.common.CameraImageGraphic;
 import com.google.firebase.samples.apps.mlkit.common.DatabaseLite;
 import com.google.firebase.samples.apps.mlkit.common.FrameMetadata;
-import com.google.firebase.samples.apps.mlkit.common.GraphicOverlay;
 import com.google.firebase.samples.apps.mlkit.java.Product;
 import com.google.firebase.samples.apps.mlkit.java.VisionProcessorBase;
+import com.google.firebase.samples.apps.mlkit.java.speech;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
-
-import static android.view.View.TEXT_ALIGNMENT_CENTER;
 
 /**
  * Custom Image Classifier Demo.
  */
 public class ImageLabelingProcessor extends VisionProcessorBase<List<FirebaseVisionImageLabel>> {
-    public Activity activity;
+
     private static final String TAG = "ImageLabelingProcessor";
 
     private final FirebaseVisionImageLabeler detector;
@@ -125,35 +116,36 @@ public class ImageLabelingProcessor extends VisionProcessorBase<List<FirebaseVis
             @NonNull List<FirebaseVisionImageLabel> labels,
             @NonNull FrameMetadata frameMetadata,
             @NonNull final Activity activity) {
-        TextView resultLabel = (TextView)activity.findViewById(R.id.resultLabel);
+        TextView resultLabel = activity.findViewById(R.id.resultLabel);
 
         LinearLayout lyl = activity.findViewById(R.id.resultLayout);
         lyl.removeAllViews();
 
-//        TableLayout resultTable = (TableLayout)activity.findViewById(R.id.resultTable);
-//        resultTable.removeAllViews();
-        if (originalCameraImage != null) {
-            CameraImageGraphic imageGraphic = new CameraImageGraphic(originalCameraImage);
-
-        }
-        if(!labels.isEmpty())
-        {
+        if(!labels.isEmpty()) {
             String label = new String();
             String[] labelsArray = new String[labels.size()];
-            Integer a=0;
-            for (FirebaseVisionImageLabel lab: labels)
-            {
-                labelsArray[a]=lab.getText();
+            Integer a = 0;
+            for (FirebaseVisionImageLabel lab : labels) {
+                labelsArray[a] = lab.getText();
                 a++;
             }
-            //labels.toArray(labelsArray);
+
+            speech.speak_flush("Labels found ");
             List<Product> products = DatabaseLite.DBaseQc.QueryLabel(labelsArray);
-            for (FirebaseVisionImageLabel label1:
+            for (FirebaseVisionImageLabel label1 :
                     labels) {
                 label += label1.getText() + "\n";
+                speech.speak(label1.getText());
             }
             resultLabel.setText(label);
 
+
+            if (!products.isEmpty()){
+                speech.speak("Matches with similar labels include ");
+            }
+            else {
+                speech.speak("No matches found ");
+            }
             for (final Product p:
                  products) {
 
@@ -165,69 +157,45 @@ public class ImageLabelingProcessor extends VisionProcessorBase<List<FirebaseVis
                 img.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 new DownloadImageTask(img).execute(p.Image);
 
-
-//                Button btn = new Button(activity);
-//                btn.setText(p.Desc);
-//                btn.setOnClickListener(new View.OnClickListener(){
-//
-//
-//                    @Override
-//                    public void onClick(View v) {
-//                        Uri uriUrl = Uri.parse(p.Link);
-//                        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
-//                        activity.startActivity(launchBrowser);
-//
-//                    }
-//                });
-////
                 TextView txt = new TextView(activity);
                 txt.setText(p.Desc);
                 txt.setClickable(true);
                 txt.setMovementMethod(LinkMovementMethod.getInstance());
                LinearLayout.LayoutParams paramLy = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
-
                 txt.setGravity(Gravity.CENTER);
                 txt.setLayoutParams(paramLy);
+                txt.setTextColor(Color.parseColor("#add8e6"));
+                speech.speak(p.Desc);
 
-txt.setOnClickListener(new View.OnClickListener(){
-
-
-    @Override
-    public void onClick(View v) {
-        Uri uriUrl = Uri.parse(p.Link);
-        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
-        activity.startActivity(launchBrowser);
-
-    }
-});
+                txt.setOnClickListener(new View.OnClickListener(){
 
 
+                    @Override
+                    public void onClick(View v) {
+                        Uri uriUrl = Uri.parse(p.Link);
+                        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+                        activity.startActivity(launchBrowser);
+
+                    }
+                });
 
                 LinearLayout lylrow = new LinearLayout(activity);
                 LinearLayout.LayoutParams params4 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 params4.setMargins(50,50,50,0);
                 lylrow.setLayoutParams(params4);
-//                txt.getLayoutParams().width = (int) (getScreenWidth(activity) * 0.8);
 
-//                TableRow row = new TableRow(activity);
-//                TableLayout.LayoutParams param3 = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,300);
-//                param3.setMargins(50,50,50,0);
-////                param.weight1.0f;
-//                row.setLayoutParams(param3);
-//                row.addView(img);
-//                row.addView(txt);
-
-               // resultTable.addView(row);
                 lylrow.addView(img);
                 lylrow.addView(txt);
                 lyl.addView(lylrow);
             }
 
         }
+
 }
 
     @Override
     protected void onFailure(@NonNull Exception e) {
+        speech.speak_flush("Image recognition failed ");
         Log.w(TAG, "Label detection failed." + e);
     }
 }
