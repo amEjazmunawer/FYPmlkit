@@ -6,23 +6,25 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".java.ChooserActivity"
-    android:background="#00FFFF">
+    android:background="#212121">
 
 
     <TextView
         android:id="@+id/tts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:paddingTop="275dp"
         android:text="Welcome!"
         android:textSize="40sp"
-        android:gravity="center"
-        android:paddingTop="150dp"
-        />
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
 
     <ImageView
-        android:layout_width="342dp"
-        android:layout_height="401dp"
-        android:src="@drawable/sm_glasses"
+        android:layout_width="350dp"
+        android:layout_height="400dp"
+        android:src="@drawable/visonwhite"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="34dp"
         tools:layout_editor_absoluteY="109dp" />

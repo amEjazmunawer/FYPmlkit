@@ -164,7 +164,8 @@ public class ImageLabelingProcessor extends VisionProcessorBase<List<FirebaseVis
                LinearLayout.LayoutParams paramLy = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
                 txt.setGravity(Gravity.CENTER);
                 txt.setLayoutParams(paramLy);
-                txt.setTextColor(Color.parseColor("#add8e6"));
+                txt.setTextSize(18);
+                txt.setTextColor(Color.parseColor("#2a976b"));
                 speech.speak(p.Desc);
 
                 txt.setOnClickListener(new View.OnClickListener(){

@@ -11,8 +11,8 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
+        android:icon="@drawable/visonwhite"
+        android:label="Visionary"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"

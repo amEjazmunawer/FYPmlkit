@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.samples.apps.mlkit.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
-    private static int SPLASH_TIME_OUT = 4500;
+    private static int SPLASH_TIME_OUT = 3500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +29,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         speech.init(getApplicationContext());
-        speech.speak("Welcome to Blind 2 See");
+        speech.speak("Welcome to Visionary");
 
     }
 

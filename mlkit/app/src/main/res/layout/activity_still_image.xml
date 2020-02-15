@@ -49,16 +49,16 @@
             android:layout_column="1"
             android:gravity="bottom|center"
             android:text="Labels:"
-            android:textSize="10dp">
+            android:textSize="12dp">
 
         </TextView>
 
         <TextView
             android:id="@+id/resultLabel"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="149dp"
             android:gravity="center"
-            android:textSize="16dp">
+            android:textSize="18dp">
 
 
         </TextView>
