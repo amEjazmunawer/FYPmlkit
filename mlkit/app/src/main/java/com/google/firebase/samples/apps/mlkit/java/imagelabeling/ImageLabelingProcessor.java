@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
@@ -155,18 +156,39 @@ public class ImageLabelingProcessor extends VisionProcessorBase<List<FirebaseVis
                 ImageView img = new ImageView(activity);
                 img.setImageBitmap(image);
                 img.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                img.setOnClickListener(new View.OnClickListener(){
+
+
+                    @Override
+                    public void onClick(View v) {
+                        Uri uriUrl = Uri.parse(p.Image);
+                        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+                        activity.startActivity(launchBrowser);
+
+                    }
+                });
+                img.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+
+                        speech.speak(p.Info);
+                        return true;
+                    }
+                });
+
                 new DownloadImageTask(img).execute(p.Image);
 
                 TextView txt = new TextView(activity);
                 txt.setText(p.Desc);
                 txt.setClickable(true);
                 txt.setMovementMethod(LinkMovementMethod.getInstance());
-               LinearLayout.LayoutParams paramLy = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
+                LinearLayout.LayoutParams paramLy = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
                 txt.setGravity(Gravity.CENTER);
                 txt.setLayoutParams(paramLy);
                 txt.setTextSize(18);
                 txt.setTextColor(Color.parseColor("#2a976b"));
                 speech.speak(p.Desc);
+                txt.setPaintFlags(txt.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
 
                 txt.setOnClickListener(new View.OnClickListener(){
 

@@ -88,6 +88,14 @@ public final class StillImageActivity extends AppCompatActivity {
     setContentView(R.layout.activity_still_image);
 
     getImageButton = findViewById(R.id.getImageButton);
+
+    getImageButton.setOnClickListener(new View.OnClickListener(){
+      @Override
+      public void onClick(View v) {
+        startCameraIntentForResult();
+      }
+    });
+
     getImageButton.setOnLongClickListener(
         new View.OnLongClickListener() {
           @Override
@@ -115,13 +123,6 @@ public final class StillImageActivity extends AppCompatActivity {
                     }
                   }
                 });
-
-           getImageButton.setOnClickListener(new View.OnClickListener(){
-              @Override
-              public void onClick(View v) {
-                startCameraIntentForResult();
-              }
-            });
 
 
             MenuInflater inflater = popup.getMenuInflater();

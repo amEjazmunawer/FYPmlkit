@@ -1,16 +1,6 @@
 background
 tench
 goldfish
-great white shark
-tiger shark
-hammerhead
-electric ray
-stingray
-cock
-hen
-ostrich
-brambling
-goldfinch
 house finch
 junco
 indigo bunting
@@ -999,5 +989,13 @@ hen-of-the-woods
 bolete
 ear
 toilet tissue
+carton
+pink
+red
+milk
+cereal
+yellow
+square
+
 
 
